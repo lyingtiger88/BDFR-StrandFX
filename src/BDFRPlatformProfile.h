@@ -76,7 +76,7 @@ inline BDFRPlatformProfileSettings GetBDFRPlatformProfileSettings(BDFRPlatformPr
             BDFROITPreference::ShortCut,
             true, true,
             true, true,
-            true, true,
+            false, true,
             2, 2,
             3.0f, 15.0f, 0.45f, 2.0f,
             3.0f, 12.0f, 0.35f, 2.25f
@@ -90,7 +90,7 @@ inline BDFRPlatformProfileSettings GetBDFRPlatformProfileSettings(BDFRPlatformPr
             BDFROITPreference::PPLL,
             true, true,
             true, true,
-            true, false,
+            false, false,
             3, 3,
             6.0f, 25.0f, 0.70f, 1.5f,
             5.0f, 20.0f, 0.60f, 1.5f
