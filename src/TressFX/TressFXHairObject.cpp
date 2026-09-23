@@ -462,7 +462,8 @@ void TressFXHairObject::UpdateRenderingParameters(const TressFXRenderingSettings
     m_LODHairDensity = 1.f;
 
     float FiberRadius = parameters->m_FiberRadius;
-    if (parameters->m_EnableHairLOD)
+    const bool enableLOD = ShadowUpdate ? parameters->m_EnableShadowLOD : parameters->m_EnableHairLOD;
+    if (enableLOD)
     {
         float MinLODDist = ShadowUpdate? min(parameters->m_ShadowLODStartDistance, parameters->m_ShadowLODEndDistance) : min(parameters->m_LODStartDistance, parameters->m_LODEndDistance);
         float MaxLODDist = ShadowUpdate? max(parameters->m_ShadowLODStartDistance, parameters->m_ShadowLODEndDistance) : max(parameters->m_LODStartDistance, parameters->m_LODEndDistance);
