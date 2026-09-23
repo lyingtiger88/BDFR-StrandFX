@@ -1,3 +1,21 @@
+# BDFR-StrandFX
+
+BDFR-StrandFX currently uses AMD TressFX 4.1 as its technical baseline and is being extended toward a scalable Unreal-oriented hair/fur system.
+
+## BDFR additions
+
+The repository now includes runtime-selectable platform profiles:
+
+- **Mobile** — ShortCut transparency, aggressive hair/shadow LOD, reduced simulation iterations, SDF collision disabled by default.
+- **Console** — balanced LOD and simulation with SDF collision enabled.
+- **PC** — PPLL transparency, highest simulation budget, SDF collision, and less aggressive LOD.
+
+The selector is available in the sample UI under **Platform Profile**. Core implementation: `src/BDFRPlatformProfile.h`.
+
+See `doc/BDFR_PlatformProfiles.md` for the current profile matrix and UE5 integration plan.
+
+---
+
 # AMD TressFX
 
 ![AMD TressFX](http://gpuopen.com/GitHub_Media/TressFX4.1-wideshot1.jpg)
