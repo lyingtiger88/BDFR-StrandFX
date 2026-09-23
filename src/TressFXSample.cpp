@@ -101,6 +101,37 @@ void TressFXSample::ToggleShortCut()
     SetOITMethod(newMethod);
 }
 
+void TressFXSample::ApplyPlatformProfile(BDFRPlatformProfile profile)
+{
+    const BDFRPlatformProfileSettings settings = GetBDFRPlatformProfileSettings(profile);
+    m_platformProfile = profile;
+
+    m_generateSDF = settings.enableSDFGeneration;
+    m_collisionResponse = settings.enableCollisionResponse;
+    m_AsyncCompute = settings.enableAsyncCompute;
+    m_useDepthApproximation = settings.useDepthApproximation;
+
+    for (size_t i = 0; i < m_activeScene.objects.size(); ++i)
+    {
+        ApplyBDFRPlatformProfile(
+            settings,
+            m_activeScene.objects[i].simulationSettings,
+            m_activeScene.objects[i].renderingSettings);
+    }
+
+    const OITMethod preferredOIT =
+        settings.oitPreference == BDFROITPreference::PPLL
+            ? OIT_METHOD_PPLL
+            : OIT_METHOD_SHORTCUT;
+
+    // During early startup the size-dependent OIT resources do not exist yet.
+    // In that case simply select the method; OnResize will create its resources.
+    if (m_nScreenWidth > 0 && m_nScreenHeight > 0)
+        SetOITMethod(preferredOIT);
+    else
+        m_eOITMethod = preferredOIT;
+}
+
 void TressFXSample::DrawCollisionMesh()
 {
     EI_CommandContext& commandList = GetDevice()->GetCurrentCommandContext();
@@ -399,6 +430,10 @@ void TressFXSample::OnCreate(HWND hWnd)
     // init GUI (non gfx stuff)
     ImGUI_Init((void *)hWnd);
     LoadScene(0);
+
+    // Start with the PC profile. The same API is used by the runtime selector
+    // and will later be mapped to Unreal Engine Device Profiles.
+    ApplyPlatformProfile(m_platformProfile);
 
     m_activeScene.viewConstantBuffer.CreateBufferResource("viewConstants");
     EI_BindSetDescription set = { { m_activeScene.viewConstantBuffer.GetBufferResource() } };
@@ -717,6 +752,18 @@ void TressFXSample::OnRender()
 
     bool opened = false;
     ImGui::Begin("Menu", &opened);
+
+    const char* platformProfiles[] = { "Mobile", "Console", "PC" };
+    int platformProfileSelected = static_cast<int>(m_platformProfile);
+    if (ImGui::Combo("Platform Profile", &platformProfileSelected, platformProfiles, _countof(platformProfiles)))
+    {
+        ApplyPlatformProfile(static_cast<BDFRPlatformProfile>(platformProfileSelected));
+    }
+
+    const BDFRPlatformProfileSettings activeProfile = GetBDFRPlatformProfileSettings(m_platformProfile);
+    ImGui::Text("Preset: %s", activeProfile.description);
+    ImGui::Separator();
+
     ImGui::Checkbox("Pause Animation", &m_PauseAnimation);
     ImGui::Checkbox("Pause Simulation", &m_PauseSimulation);
     ImGui::Checkbox("Draw Hair", &m_drawHair);
@@ -741,11 +788,10 @@ void TressFXSample::OnRender()
     }
 
     const char * drawingControl[] = { "ShortCut", "PPLL" };
-    static int drawingControlSelected = 0;
-    int oldDrawingControlSelected = drawingControlSelected;
-    ImGui::Combo("Drawing Method", &drawingControlSelected, drawingControl, _countof(drawingControl));
-    if (drawingControlSelected != oldDrawingControlSelected) {
-        ToggleShortCut();
+    int drawingControlSelected = (m_eOITMethod == OIT_METHOD_PPLL) ? 1 : 0;
+    if (ImGui::Combo("Drawing Method", &drawingControlSelected, drawingControl, _countof(drawingControl)))
+    {
+        SetOITMethod(drawingControlSelected == 1 ? OIT_METHOD_PPLL : OIT_METHOD_SHORTCUT);
     }
 
     GetDevice()->OnBeginFrame(m_AsyncCompute);
