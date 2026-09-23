@@ -27,6 +27,7 @@ endif()
 
 set(common_sources 
 	EngineInterface.h
+	BDFRPlatformProfile.h
 	SceneGLTFImpl.cpp
 	SceneGLTFImpl.h
 	TressFXSample.cpp
