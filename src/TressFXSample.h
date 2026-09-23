@@ -33,6 +33,7 @@
 #include "TressFXCommon.h"
 #include "TressFXSDFCollision.h"
 #include "TressFXSettings.h"
+#include "BDFRPlatformProfile.h"
 
 #include <vector>
 
@@ -130,6 +131,7 @@ public:
     void UpdateRenderingParameters();
     void UpdateRenderShadowParameters(AMD::float4& CameraPos);
     void ToggleShortCut();
+    void ApplyPlatformProfile(BDFRPlatformProfile profile);
 
     // debug drawing
     void DrawCollisionMesh();
@@ -169,6 +171,7 @@ private:
     int       m_nScreenWidth;
     int       m_nScreenHeight;
     int       m_nPPLLNodes;
+    BDFRPlatformProfile m_platformProfile = BDFRPlatformProfile::PC;
 
     void InitializeLayouts();
     void DestroyLayouts();
