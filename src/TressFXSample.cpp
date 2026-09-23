@@ -431,10 +431,6 @@ void TressFXSample::OnCreate(HWND hWnd)
     ImGUI_Init((void *)hWnd);
     LoadScene(0);
 
-    // Start with the PC profile. The same API is used by the runtime selector
-    // and will later be mapped to Unreal Engine Device Profiles.
-    ApplyPlatformProfile(m_platformProfile);
-
     m_activeScene.viewConstantBuffer.CreateBufferResource("viewConstants");
     EI_BindSetDescription set = { { m_activeScene.viewConstantBuffer.GetBufferResource() } };
     m_activeScene.viewBindSet = GetDevice()->CreateBindSet(GetViewLayout(), set);
@@ -563,6 +559,9 @@ void TressFXSample::LoadScene(int sceneNumber)
         sds[0].collisionMeshes.push_back(collisionMeshRightHand);
     }
     LoadScene(sds[sceneNumber]);
+
+    // Preserve the selected platform budget when scenes/assets are reloaded.
+    ApplyPlatformProfile(m_platformProfile);
 }
 
 void TressFXSample::OnDestroy()
