@@ -15,7 +15,8 @@ enum class BDFRPlatformProfile : int
 {
     Mobile = 0,
     Console = 1,
-    PC = 2
+    PC = 2,
+    PCPerformance = 3
 };
 
 enum class BDFROITPreference : int
@@ -80,6 +81,19 @@ inline BDFRPlatformProfileSettings GetBDFRPlatformProfileSettings(BDFRPlatformPr
             2, 2,
             3.0f, 15.0f, 0.45f, 2.0f,
             3.0f, 12.0f, 0.35f, 2.25f
+        };
+
+    case BDFRPlatformProfile::PCPerformance:
+        return {
+            "PC Performance",
+            "High-quality PC preset with ShortCut OIT and reduced strand/shadow density.",
+            BDFROITPreference::ShortCut,
+            true, true,
+            true, true,
+            true, true,
+            2, 2,
+            4.0f, 20.0f, 0.50f, 1.8f,
+            4.0f, 16.0f, 0.40f, 2.0f
         };
 
     case BDFRPlatformProfile::PC:
