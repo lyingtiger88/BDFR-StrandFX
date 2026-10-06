@@ -752,7 +752,7 @@ void TressFXSample::OnRender()
     bool opened = false;
     ImGui::Begin("Menu", &opened);
 
-    const char* platformProfiles[] = { "Mobile", "Console", "PC" };
+    const char* platformProfiles[] = { "Mobile", "Console", "PC", "PC Performance" };
     int platformProfileSelected = static_cast<int>(m_platformProfile);
     if (ImGui::Combo("Platform Profile", &platformProfileSelected, platformProfiles, _countof(platformProfiles)))
     {
